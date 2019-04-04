@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 
 const assert = require("chai").assert,
-    CLIEngine = require("../../lib/cli-engine"),
+    CLIEngine = require("../../lib/cli-engine").CLIEngine,
     path = require("path"),
     sinon = require("sinon"),
     leche = require("leche"),
@@ -57,7 +57,7 @@ describe("cli", () => {
         sandbox.stub(fakeCLIEngine.prototype, "getFormatter").returns(sinon.spy());
 
         const localCLI = proxyquire("../../lib/cli", {
-            "./cli-engine": fakeCLIEngine,
+            "./cli-engine/index": { CLIEngine: fakeCLIEngine },
             "./util/logging": log
         });
 
@@ -323,7 +323,7 @@ describe("cli", () => {
     describe("when given a directory with eslint excluded files in the directory", () => {
         it("should throw an error and not process any files", () => {
             const ignorePath = getFixturePath(".eslintignore");
-            const filePath = getFixturePath(".");
+            const filePath = getFixturePath("cli");
 
             assert.throws(() => {
                 cli.execute(`--ignore-path ${ignorePath} ${filePath}`);
@@ -591,9 +591,10 @@ describe("cli", () => {
     describe("when given an parser name", () => {
         it("should exit with error if parser is invalid", () => {
             const filePath = getFixturePath("passing.js");
-            const exit = cli.execute(`--no-ignore --parser test111 ${filePath}`);
 
-            assert.strictEqual(exit, 1);
+            assert.throws(() => {
+                cli.execute(`--no-ignore --parser test111 ${filePath}`);
+            }, "Cannot find module 'test111'");
         });
 
         it("should exit with no error if parser is valid", () => {
@@ -707,7 +708,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.stub();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -730,7 +731,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.stub();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -767,7 +768,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().once();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -805,7 +806,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().withExactArgs(report);
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -843,7 +844,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().withExactArgs(report);
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -859,7 +860,7 @@ describe("cli", () => {
             const fakeCLIEngine = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -894,7 +895,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -925,7 +926,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.stub();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -961,7 +962,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -999,7 +1000,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -1036,7 +1037,7 @@ describe("cli", () => {
             fakeCLIEngine.outputFixes = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 
@@ -1051,7 +1052,7 @@ describe("cli", () => {
             const fakeCLIEngine = sandbox.mock().never();
 
             localCLI = proxyquire("../../lib/cli", {
-                "./cli-engine": fakeCLIEngine,
+                "./cli-engine/index": { CLIEngine: fakeCLIEngine },
                 "./util/logging": log
             });
 

@@ -37,8 +37,7 @@ describe("ModuleResolver", () => {
 
         ], (name, lookupPath, expected) => {
             it("should find the correct location of a file", () => {
-                const resolver = new ModuleResolver(),
-                    result = resolver.resolve(name, lookupPath);
+                const result = ModuleResolver.resolve(name, lookupPath);
 
                 assert.strictEqual(result, expected);
             });
